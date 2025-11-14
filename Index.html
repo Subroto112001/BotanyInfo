@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Botany Explorer — Plant Reference</title>
+    <meta name="description"
+        content="Responsive single-file plant reference web app for botany students. Search, browse, save favorites, and fetch extended plant info from Wikipedia." />
+   <link rel="stylesheet" href="./Style/Style.css" />
+</head>
+<body>
+    <div class="app" id="app">
+        <header>
+            <div class="brand">
+                <div class="logo">🌿</div>
+                <div>
+                    <h1>Botany Explorer</h1>
+                    <p class="lead">A plant reference for botany students — search, fetch &amp; save plant info.</p>
+                </div>
+            </div>
+            <div class="controls">
+                <div class="search">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden>
+                        <path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                            stroke-linejoin="round"></path>
+                        <circle cx="11" cy="11" r="5" stroke="currentColor" stroke-width="1.5"></circle>
+                    </svg>
+                    <input id="search" placeholder="Search plants..." />
+                </div>
+                <div class="filters">
+                    <select id="familyFilter">
+                        <option value="">All families</option>
+                    </select>
+                    <select id="regionFilter">
+                        <option value="">All regions</option>
+                    </select>
+                    <button class="btn" id="clearBtn">Clear</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Mobile Navigation -->
+        <div class="mobile-nav" id="mobileNav">
+            <button class="mobile-nav-btn active" data-view="plants">
+                <span>🌿</span>
+                <span>Plants</span>
+            </button>
+            <button class="mobile-nav-btn" data-view="favorites">
+                <span>⭐</span>
+                <span>Favorites</span>
+            </button>
+            <button class="mobile-nav-btn" data-view="resources">
+                <span>📚</span>
+                <span>Resources</span>
+            </button>
+        </div>
+
+        <main>
+            <section class="left" id="plantsView">
+                <div class="grid" id="grid"></div>
+                <div style="margin-top:14px;display:flex;justify-content:center">
+                    <button class="btn primary" id="loadMore">Load more</button>
+                </div>
+            </section>
+
+            <aside id="desktopAside">
+                <div class="panel">
+                    <h3>Favorites ⭐</h3>
+                    <div class="fav-list" id="favList">
+                        <div class="muted">No favorites yet — click the star on a plant card.</div>
+                    </div>
+                </div>
+                <hr style="border:none;height:12px">
+                <div class="panel">
+                    <h3>📚 Study Resources</h3>
+                    <ul style="padding-left:18px;color:var(--muted);margin:6px 0;font-size:13px">
+                        <li><a href="https://www.ncbi.nlm.nih.gov/pmc/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">NCBI PMC - Research Papers</a></li>
+                        <li><a href="https://www.researchgate.net/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">ResearchGate - Plant Science</a></li>
+                        <li><a href="https://www.jstor.org/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">JSTOR - Botany Collections</a></li>
+                        <li><a href="https://plants.usda.gov/home" target="_blank"
+                                style="color:var(--accent);text-decoration:none">USDA Plant Database</a></li>
+                        <li><a href="https://www.gbif.org/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">GBIF - Global Biodiversity</a></li>
+                    </ul>
+                </div>
+                <hr style="border:none;height:12px">
+                <div class="panel">
+                    <h3>🎓 বাংলা রিসোর্স</h3>
+                    <ul style="padding-left:18px;color:var(--muted);margin:6px 0;font-size:13px">
+                        <li><a href="https://www.banglajol.info/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">BanglaJOL - জার্নাল</a></li>
+                        <li><a href="https://www.du.ac.bd/body/Botany" target="_blank"
+                                style="color:var(--accent);text-decoration:none">ঢাকা বিশ্ববিদ্যালয় - উদ্ভিদবিজ্ঞান</a>
+                        </li>
+                        <li><a href="https://elearning.du.ac.bd/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">DU E-Learning Portal</a></li>
+                        <li><a href="https://www.rokomari.com/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">রকমারি - বই কিনুন</a></li>
+                    </ul>
+                </div>
+                <hr style="border:none;height:12px">
+                <div class="panel">
+                    <h3>Quick tips 💡</h3>
+                    <ul style="padding-left:18px;color:var(--muted);margin:6px 0">
+                        <li>Search with partial names (eg. "rosa").</li>
+                        <li>Click a card to view extended info from Wikipedia.</li>
+                        <li>Favorites are saved in your browser.</li>
+                    </ul>
+                </div>
+            </aside>
+
+            <!-- Mobile Views -->
+            <section class="mobile-view" id="favoritesView" style="display:none">
+                <div class="panel">
+                    <h3>Favorites ⭐</h3>
+                    <div class="fav-list" id="favListMobile">
+                        <div class="muted">No favorites yet — click the star on a plant card.</div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="mobile-view" id="resourcesView" style="display:none">
+                <div class="panel">
+                    <h3>📚 Study Resources</h3>
+                    <ul style="padding-left:18px;color:var(--muted);margin:6px 0;font-size:13px">
+                        <li><a href="https://www.ncbi.nlm.nih.gov/pmc/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">NCBI PMC - Research Papers</a></li>
+                        <li><a href="https://www.researchgate.net/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">ResearchGate - Plant Science</a></li>
+                        <li><a href="https://www.jstor.org/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">JSTOR - Botany Collections</a></li>
+                        <li><a href="https://plants.usda.gov/home" target="_blank"
+                                style="color:var(--accent);text-decoration:none">USDA Plant Database</a></li>
+                        <li><a href="https://www.gbif.org/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">GBIF - Global Biodiversity</a></li>
+                    </ul>
+                </div>
+                <hr style="border:none;height:12px">
+                <div class="panel">
+                    <h3>🎓 বাংলা রিসোর্স</h3>
+                    <ul style="padding-left:18px;color:var(--muted);margin:6px 0;font-size:13px">
+                        <li><a href="https://www.banglajol.info/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">BanglaJOL - জার্নাল</a></li>
+                        <li><a href="https://www.du.ac.bd/body/Botany" target="_blank"
+                                style="color:var(--accent);text-decoration:none">ঢাকা বিশ্ববিদ্যালয় - উদ্ভিদবিজ্ঞান</a>
+                        </li>
+                        <li><a href="https://elearning.du.ac.bd/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">DU E-Learning Portal</a></li>
+                        <li><a href="https://www.rokomari.com/" target="_blank"
+                                style="color:var(--accent);text-decoration:none">রকমারি - বই কিনুন</a></li>
+                    </ul>
+                </div>
+                <hr style="border:none;height:12px">
+                <div class="panel">
+                    <h3>Quick tips 💡</h3>
+                    <ul style="padding-left:18px;color:var(--muted);margin:6px 0">
+                        <li>Search with partial names (eg. "rosa").</li>
+                        <li>Click a card to view extended info from Wikipedia.</li>
+                        <li>Favorites are saved in your browser.</li>
+                    </ul>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div id="modal" class="modal" style="display:none" aria-hidden="true">
+        <div class="dialog" role="dialog" aria-modal="true">
+            <button class="close" id="closeModal">✕</button>
+            <h2 id="modalTitle">Plant name</h2>
+            <div class="content">
+                <div>
+                    <img id="modalImage" alt="plant image" src="" />
+                    <p id="modalExtract" style="margin-top:10px;color:#d1fae5"></p>
+                    <p style="margin-top:6px; color:#a7f3d0" class="muted">Source: Wikipedia summary</p>
+                </div>
+                <div>
+                    <div style="display:flex;gap:8px;flex-direction:column">
+                        <div>
+                            <div class="pill" id="modalFamily">Family: —</div>
+                            <div class="pill" id="modalRegion" style="margin-top:6px">Region: —</div>
+                        </div>
+                        <div>
+                            <button class="btn primary" id="wikiBtn" style="width:100%">Open Wikipedia</button>
+                        </div>
+                    </div>
+                    <div style="margin-top:12px">
+                        <h3 style="margin:0 0 6px 0; color:#d1fae5">Details</h3>
+                        <div id="modalDetails" style="color:#a7f3d0" class="muted">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./Script/Index.js"> </script>
+      
+</body>
